@@ -5,6 +5,9 @@ import * as productApiService from '../../services/product-api.service';
 import { Product } from '../../models/product.model';
 import * as productActions from '../reducers/productSlice';
 import * as uiLoadingActions from '../reducers/uiLoadingSlice';
+import * as uiToastMessageActions from '../reducers/uiToastMessageSlice';
+import { AxiosResponse } from 'axios';
+import { ActionCreatorWithPayload, PayloadAction } from '@reduxjs/toolkit';
 
 function* getProducts() {
   try {
@@ -14,8 +17,10 @@ function* getProducts() {
       })
     );
 
-    const products: Product[] = yield call(productApiService.getProducts);
-    yield put(productActions.getProductsSuccess({ products }));
+    const res: AxiosResponse<Product[]> = yield call(
+      productApiService.getProducts
+    );
+    yield put(productActions.getProductsSuccess({ products: res.data }));
   } catch (error) {
     yield put(productActions.getProductsFailed());
   } finally {
@@ -31,55 +36,198 @@ function* watchGetProductsRequest() {
   yield takeEvery(productActions.getProducts, getProducts);
 }
 
-/* function* getProducts() {
+function* getProductById({ payload }: PayloadAction<{ productId: string }>) {
   try {
     yield put(
-      uiLoadingActions.startLoading({ actionName: actions.Types.GET_PRODUCTS })
+      uiLoadingActions.startLoading({
+        actionName: productActions.getProductById.type,
+      })
     );
 
-    const products: Product[] = yield call(productService.getProducts);
-    yield put(actions.getProductsSuccess({ products }));
+    const res: AxiosResponse<Product> = yield call(
+      productApiService.getProductById,
+      payload.productId
+    );
+    yield put(productActions.getProductByIdSuccess({ product: res.data }));
   } catch (error) {
-    yield put(actions.getProductsFailed({ error }));
+    yield put(productActions.getProductsFailed());
   } finally {
     yield put(
-      uiLoadingActions.stopLoading({ actionName: actions.Types.GET_PRODUCTS })
+      uiLoadingActions.stopLoading({
+        actionName: productActions.getProductById.type,
+      })
     );
   }
 }
 
-function* watchGetProductsRequest() {
-  yield takeEvery(actions.Types.GET_PRODUCTS, getProducts);
+function* watchGetProductByIdRequest() {
+  yield takeEvery<
+    ActionCreatorWithPayload<
+      {
+        productId: string;
+      },
+      string
+    >
+  >(productActions.getProductById, getProductById);
 }
 
-function* createProduct({ product }: any) {
+function* createProduct({ payload }: PayloadAction<{ product: Product }>) {
   try {
-    console.log('product: ', product);
     yield put(
       uiLoadingActions.startLoading({
-        actionName: actions.Types.CREATE_PRODUCT,
+        actionName: productActions.createProduct.type,
       })
     );
 
-    yield call(productService.createProduct, product);
+    yield call(productApiService.createProduct, payload.product);
 
-    yield put(actions.createProductSuccess());
-  } catch (error) {
-    yield put(actions.createProductFailed({ error }));
+    yield put(
+      uiToastMessageActions.setToastMessage({
+        message: 'Create successfully',
+        type: 'success',
+      })
+    );
+
+    yield put(productActions.createProductSuccess());
+  } catch (error: any) {
+    yield put(
+      uiToastMessageActions.setToastMessage({
+        message: error,
+        type: 'error',
+      })
+    );
+
+    yield put(productActions.createProductFailed());
   } finally {
     yield put(
-      uiLoadingActions.stopLoading({ actionName: actions.Types.CREATE_PRODUCT })
+      uiLoadingActions.stopLoading({
+        actionName: productActions.createProduct.type,
+      })
     );
   }
 }
 
 function* watchCreateProductRequest() {
-  yield takeLatest(actions.Types.CREATE_PRODUCT, createProduct);
-} */
+  yield takeLatest<
+    ActionCreatorWithPayload<
+      {
+        product: Product;
+      },
+      string
+    >
+  >(productActions.createProduct, createProduct);
+}
+
+function* updateProduct({
+  payload,
+}: PayloadAction<{ productId: string; product: Product }>) {
+  try {
+    yield put(
+      uiLoadingActions.startLoading({
+        actionName: productActions.updateProduct.type,
+      })
+    );
+
+    yield call(
+      productApiService.updateProduct,
+      payload.productId,
+      payload.product
+    );
+
+    yield put(
+      uiToastMessageActions.setToastMessage({
+        message: 'Update successfully',
+        type: 'success',
+      })
+    );
+
+    yield put(productActions.updateProductSuccess());
+  } catch (error: any) {
+    yield put(
+      uiToastMessageActions.setToastMessage({
+        message: error,
+        type: 'error',
+      })
+    );
+
+    yield put(productActions.updateProductFailed());
+  } finally {
+    yield put(
+      uiLoadingActions.stopLoading({
+        actionName: productActions.updateProduct.type,
+      })
+    );
+  }
+}
+
+function* watchUpdateProductRequest() {
+  yield takeLatest<
+    ActionCreatorWithPayload<
+      {
+        productId: string;
+        product: Product;
+      },
+      string
+    >
+  >(productActions.updateProduct, updateProduct);
+}
+
+function* deleteProduct({ payload }: PayloadAction<{ productId: string }>) {
+  try {
+    yield put(
+      uiLoadingActions.startLoading({
+        actionName: productActions.deleteProduct.type,
+      })
+    );
+
+    yield call(productApiService.deleteProduct, payload.productId);
+
+    yield put(
+      uiToastMessageActions.setToastMessage({
+        message: 'Delete successfully',
+        type: 'success',
+      })
+    );
+
+    yield put(productActions.deleteProductSuccess());
+
+    yield put(productActions.getProducts());
+  } catch (error: any) {
+    yield put(
+      uiToastMessageActions.setToastMessage({
+        message: error,
+        type: 'error',
+      })
+    );
+
+    yield put(productActions.deleteProductFailed());
+  } finally {
+    yield put(
+      uiLoadingActions.stopLoading({
+        actionName: productActions.deleteProduct.type,
+      })
+    );
+  }
+}
+
+function* watchDeleteProductRequest() {
+  yield takeEvery<
+    ActionCreatorWithPayload<
+      {
+        productId: string;
+      },
+      string
+    >,
+    any
+  >(productActions.deleteProduct, deleteProduct);
+}
 
 const productSagas = [
   fork(watchGetProductsRequest),
-  // fork(watchCreateProductRequest),
+  fork(watchDeleteProductRequest),
+  fork(watchCreateProductRequest),
+  fork(watchUpdateProductRequest),
+  fork(watchGetProductByIdRequest)
 ];
 
 export default productSagas;

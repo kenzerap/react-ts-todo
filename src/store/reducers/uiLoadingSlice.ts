@@ -26,7 +26,7 @@ export const uiLoadingSlice = createSlice({
       state.loadings[action.payload.actionName] = false;
     },
     resetLoading: (state: UiLoadingState) => {
-      state = initialState;
+      state.loadings = {};
     },
   },
 });

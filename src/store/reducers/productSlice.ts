@@ -4,10 +4,12 @@ import { Product } from '../../models/product.model';
 
 export interface ProductsState {
   products: Product[];
+  productDetail: Product | null;
 }
 
 const initialState: ProductsState = {
   products: [],
+  productDetail: null,
 };
 
 export const productSlice = createSlice({
@@ -22,8 +24,42 @@ export const productSlice = createSlice({
       state.products = action.payload.products;
     },
     getProductsFailed: () => {},
+
+    getProductById: (
+      state: ProductsState,
+      action: PayloadAction<{ productId: string }>
+    ) => {},
+    getProductByIdSuccess: (
+      state: ProductsState,
+      action: PayloadAction<{ product: Product }>
+    ) => {
+      state.productDetail = action.payload.product;
+    },
+    getProductByIdFailed: () => {},
+
+    createProduct: (
+      state: ProductsState,
+      action: PayloadAction<{ product: Product }>
+    ) => {},
+    createProductSuccess: () => {},
+    createProductFailed: () => {},
+
+    updateProduct: (
+      state: ProductsState,
+      action: PayloadAction<{ productId: string; product: Product }>
+    ) => {},
+    updateProductSuccess: () => {},
+    updateProductFailed: () => {},
+
+    deleteProduct: (
+      _state: ProductsState,
+      _action: PayloadAction<{ productId: string }>
+    ) => {},
+    deleteProductSuccess: () => {},
+    deleteProductFailed: () => {},
+
     resetProducts: (state: ProductsState) => {
-      state = initialState;
+      state.products = [];
     },
   },
 });
@@ -32,6 +68,23 @@ export const {
   getProducts,
   getProductsSuccess,
   getProductsFailed,
+
+  getProductById,
+  getProductByIdSuccess,
+  getProductByIdFailed,
+
+  createProduct,
+  createProductSuccess,
+  createProductFailed,
+
+  updateProduct,
+  updateProductSuccess,
+  updateProductFailed,
+
+  deleteProduct,
+  deleteProductSuccess,
+  deleteProductFailed,
+
   resetProducts,
 } = productSlice.actions;
 

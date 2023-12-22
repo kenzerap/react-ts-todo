@@ -31,12 +31,20 @@ const router = createBrowserRouter([
         },
       },
       {
+        path: 'product/create',
+        async lazy(): Promise<any> {
+          let ProductCreatePage = (await import('./pages/ProductCreate/ProductCreate'))
+            .default;
+          return { Component: ProductCreatePage };
+        },
+      },
+      {
         path: 'product/:productId',
         async lazy(): Promise<any> {
-          let ProductDetailPage = (
-            await import('./pages/ProductDetail/ProductDetail')
+          let ProductEditPage = (
+            await import('./pages/ProductEdit/ProductEdit')
           ).default;
-          return { Component: ProductDetailPage };
+          return { Component: ProductEditPage };
         },
       },
       {

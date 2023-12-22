@@ -1,0 +1,7 @@
+.image {
+  width: 20rem;
+}
+
+.cardbar {
+  height: calc(100vh - 8rem);
+}

@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { productReducer } from './productSlice';
 import { uiLoadingReducer } from './uiLoadingSlice';
+import { uiToastMessageReducer } from './uiToastMessageSlice';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../sagas';
 
@@ -9,6 +10,7 @@ export const store = configureStore({
   reducer: {
     product: productReducer,
     uiLoading: uiLoadingReducer,
+    uiToastMessage: uiToastMessageReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(sagaMiddleware),
