@@ -1,28 +1,26 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import HeaderBar from './components/HeaderBar/HeaderBar';
 import { Outlet } from 'react-router-dom';
 import './App.css';
 import ToastMessage from './components/ToastMessage/ToastMessage';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './store/reducers';
+import { useDispatch } from 'react-redux';
+import { setAuthState } from './store/reducers/authSlice';
 
 function App() {
-  const isShowMessage: boolean = useSelector((state: RootState) => {
-    return state.uiToastMessage.isShow;
-  });
-  const message: string = useSelector((state: RootState) => {
-    return state.uiToastMessage.message;
-  });
-  const messageType: string = useSelector((state: RootState) => {
-    return state.uiToastMessage.type;
-  });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token') || '';
+    const userInfo = localStorage.getItem('userInfo');
+    const user = userInfo ? JSON.parse(userInfo) : null;
+
+    dispatch(setAuthState({ token, user }));
+  }, []);
 
   return (
     <Fragment>
       <HeaderBar></HeaderBar>
-      {isShowMessage && (
-        <ToastMessage message={message} type={messageType}></ToastMessage>
-      )}
+      <ToastMessage></ToastMessage>
 
       <div className="m-8">
         <Outlet />

@@ -17,7 +17,7 @@ import {
   resetProducts,
   updateProduct,
 } from '../../store/reducers/productSlice';
-import { RootState } from '../../store/reducers';
+import * as fromReducer from '../../store/reducers';
 import { resetLoading } from '../../store/reducers/uiLoadingSlice';
 import { Product } from '../../models/product.model';
 
@@ -35,13 +35,15 @@ const ProductCreateEditForm: React.FC<{
     description: '',
   });
 
-  const isCreating: boolean = useSelector((state: RootState) => {
-    return state.uiLoading.loadings[createProduct.type];
-  });
+  const text = props.isCreate ? 'Create ' : 'Edit';
 
-  const isUpdating: boolean = useSelector((state: RootState) => {
-    return state.uiLoading.loadings[updateProduct.type];
-  });
+  const isCreating: boolean = useSelector(fromReducer.selectLoadings)[
+    createProduct.type
+  ];
+  const isUpdating: boolean = useSelector(fromReducer.selectLoadings)[
+    updateProduct.type
+  ];
+  const message = useSelector(fromReducer.selectMessageType);
 
   useEffect(() => {
     return () => {
@@ -55,7 +57,7 @@ const ProductCreateEditForm: React.FC<{
       setIsSubmitted(true);
     }
 
-    if (!isCreating && !isUpdating && isSubmitted) {
+    if (!isCreating && !isUpdating && isSubmitted && message !== 'error') {
       navigate('/product');
     }
   }, [isCreating, isSubmitted, isUpdating, navigate, dispatch]);
@@ -97,12 +99,10 @@ const ProductCreateEditForm: React.FC<{
       onSubmit={submitForm}
     >
       {(formik) => {
-        const { errors, touched, isValid, dirty } = formik;
+        const { errors, touched, isValid } = formik;
         return (
           <Fragment>
-            <div className="text-2xl font-bold mb-8	">
-              {props.isCreate ? 'Create ' : 'Edit'} product
-            </div>
+            <div className="text-2xl font-bold mb-8	">{text} product</div>
             <Card>
               <Form>
                 <div>
@@ -112,6 +112,7 @@ const ProductCreateEditForm: React.FC<{
                   <TextInput
                     id="name"
                     placeholder="Product name"
+                    type='text'
                     color={errors.name && touched.name ? 'failure' : ''}
                     value={formik.values.name}
                     onChange={formik.handleChange}
@@ -150,6 +151,7 @@ const ProductCreateEditForm: React.FC<{
                   </div>
                   <TextInput
                     id="imageUrl"
+                    type='text'
                     placeholder="imageUrl"
                     value={formik.values.imageUrl}
                     onChange={formik.handleChange}
@@ -175,16 +177,16 @@ const ProductCreateEditForm: React.FC<{
                   <Button
                     type="submit"
                     className={
-                      !isValid || isCreating || isUpdating ? 'disabled-btn' : ''
+                      !isValid || isCreating || isUpdating ? 'disabled-btn mr-2' : 'mr-2'
                     }
                     disabled={!isValid || isCreating || isUpdating}
                   >
-                    {isCreating || isUpdating ? <Spinner /> : 'Submit'}
+                    {isCreating || isUpdating ? <Spinner /> : text}
                   </Button>
 
                   <Button
                     type="button"
-                    className="ml-4"
+                    className="ml-2"
                     onClick={navigateToList}
                   >
                     Cancel

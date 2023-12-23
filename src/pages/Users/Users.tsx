@@ -1,91 +1,86 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import classes from './Users.module.css';
-import { Table } from 'flowbite-react';
+import { Card, Spinner, Table } from 'flowbite-react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as fromReducer from '../../store/reducers';
+import { getUsers, resetUserState } from '../../store/reducers/userSlice';
+import { User } from '../../models/user.model';
+import { Link } from 'react-router-dom';
+import { resetLoading } from '../../store/reducers/uiLoadingSlice';
 
 const UsersPage: React.FC<{}> = (props) => {
+  const dispatch = useDispatch();
+  const loading: boolean = useSelector(fromReducer.selectLoadings)[
+    getUsers.type
+  ];
+  const users: User[] = useSelector(fromReducer.selectUsers);
+
+  useEffect(() => {
+    dispatch(getUsers());
+
+    return () => {
+      dispatch(resetLoading());
+      dispatch(resetUserState());
+    };
+  }, []);
+
+  const deleteUserHandler = (userId: string) => {
+    alert('feature is implementing');
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <h3>User list</h3>
-      <Table hoverable>
-        <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Email</Table.HeadCell>
-          <Table.HeadCell>Phone</Table.HeadCell>
-          <Table.HeadCell>Address</Table.HeadCell>
-          <Table.HeadCell>
-            <span className="sr-only">Edit</span>
-          </Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {'Apple MacBook Pro 17"'}
-            </Table.Cell>
-            <Table.Cell>Sliver</Table.Cell>
-            <Table.Cell>Laptop</Table.Cell>
-            <Table.Cell>$2999</Table.Cell>
-            <Table.Cell>
-              <a
-                href="#"
-                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-              >
-                Edit
-              </a>
-              <a
-                href="#"
-                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4"
-              >
-                Delete
-              </a>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              Microsoft Surface Pro
-            </Table.Cell>
-            <Table.Cell>White</Table.Cell>
-            <Table.Cell>Laptop PC</Table.Cell>
-            <Table.Cell>$1999</Table.Cell>
-            <Table.Cell>
-              <a
-                href="#"
-                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-              >
-                Edit
-              </a>
-              <a
-                href="#"
-                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4"
-              >
-                Delete
-              </a>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              Magic Mouse 2
-            </Table.Cell>
-            <Table.Cell>Black</Table.Cell>
-            <Table.Cell>Accessories</Table.Cell>
-            <Table.Cell>$99</Table.Cell>
-            <Table.Cell>
-              <a
-                href="#"
-                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-              >
-                Edit
-              </a>
-              <a
-                href="#"
-                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4"
-              >
-                Delete
-              </a>
-            </Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
-    </div>
+    <Fragment>
+      <div className="flex justify-between mb-8">
+        <div className="text-2xl font-bold">User list</div>
+        <div></div>
+      </div>
+
+      <Card className="overflow-x-auto">
+        {loading ? (
+          <div className="text-center">
+            <Spinner aria-label="loading" />
+          </div>
+        ) : (
+          <Table hoverable>
+            <Table.Head>
+              <Table.HeadCell>Name</Table.HeadCell>
+              <Table.HeadCell>Email</Table.HeadCell>
+              <Table.HeadCell>Phone</Table.HeadCell>
+              <Table.HeadCell>Address</Table.HeadCell>
+              <Table.HeadCell>
+                <span className="sr-only">Delete</span>
+              </Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {(users || []).map((user) => {
+                return (
+                  <Table.Row
+                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                    key={user.id}
+                  >
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {user.name}
+                    </Table.Cell>
+                    <Table.Cell>{user.email}</Table.Cell>
+                    <Table.Cell>{user.phone}</Table.Cell>
+                    <Table.Cell>{user.address}</Table.Cell>
+                    <Table.Cell>
+                      <Link
+                        to={''}
+                        onClick={() => deleteUserHandler(user.id)}
+                        className={`font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4`}
+                      >
+                        Delete
+                      </Link>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
+        )}
+      </Card>
+    </Fragment>
   );
 };
 

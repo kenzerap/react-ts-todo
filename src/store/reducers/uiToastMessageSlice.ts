@@ -19,9 +19,11 @@ export const uiToastMessageSlice = createSlice({
   reducers: {
     setToastMessage: (
       state: UiToastMessageState,
-      action: PayloadAction<{ message: string; type: 'success' | 'error' | '' }>
+      action: PayloadAction<{ message: any; type: 'success' | 'error' | '' }>
     ) => {
-      state.message = action.payload.message;
+      state.message = action.payload.message.message
+        ? action.payload.message.message
+        : JSON.stringify(action.payload.message);
       state.type = action.payload.type;
       state.isShow = true;
     },

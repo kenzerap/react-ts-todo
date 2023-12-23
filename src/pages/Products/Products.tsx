@@ -7,7 +7,7 @@ import {
   resetProducts,
   deleteProduct,
 } from '../../store/reducers/productSlice';
-import { RootState } from '../../store/reducers';
+import * as fromReducer from '../../store/reducers';
 import { Product } from '../../models/product.model';
 import { Link, useNavigate } from 'react-router-dom';
 import { Spinner } from 'flowbite-react';
@@ -18,16 +18,14 @@ const ProductsPage: React.FC<{}> = (props) => {
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
   const [productIdDeleted, setProductIdDeleted] = useState('');
 
-  const products: Product[] = useSelector((state: RootState) => {
-    return state.product.products;
-  });
+  const products: Product[] = useSelector(fromReducer.selectProducts);
 
-  const productsLoading: boolean = useSelector((state: RootState) => {
-    return state.uiLoading.loadings[getProducts.type];
-  });
-  const deleting: boolean = useSelector((state: RootState) => {
-    return state.uiLoading.loadings[deleteProduct.type];
-  });
+  const productsLoading: boolean = useSelector(fromReducer.selectLoadings)[
+    getProducts.type
+  ];
+  const deleting: boolean = useSelector(fromReducer.selectLoadings)[
+    deleteProduct.type
+  ];
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

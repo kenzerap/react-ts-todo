@@ -1,6 +1,4 @@
 import { takeEvery, takeLatest, call, put, fork } from 'redux-saga/effects';
-// import * as uiLoadingActions from '../actions/uiLoading';
-// import * as actions from '../actions/products';
 import * as productApiService from '../../services/product-api.service';
 import { Product } from '../../models/product.model';
 import * as productActions from '../reducers/productSlice';

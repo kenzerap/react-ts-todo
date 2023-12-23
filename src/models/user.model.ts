@@ -1,8 +1,8 @@
-export interface Product {
+export interface User {
   id: string;
   email: string;
-  password: number;
+  password: string;
   name: string;
   phone: number;
-  address: number;
+  address: string;
 }

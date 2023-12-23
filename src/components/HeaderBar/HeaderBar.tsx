@@ -1,9 +1,22 @@
 import React from 'react';
-import { Avatar, Dropdown, Navbar } from 'flowbite-react';
+import { Avatar, Button, Dropdown, Navbar } from 'flowbite-react';
 import classes from './HeaderBar.module.css';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import * as fromReducer from '../../store/reducers';
+import { useDispatch, useSelector } from 'react-redux';
+import { User } from '../../models/user.model';
+import { logout } from '../../store/reducers/authSlice';
 
 const HeaderBar: React.FC<{}> = (props) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userInfo: User | null = useSelector(fromReducer.selectUserInfo);
+
+  const logOutHandeler = () => {
+    dispatch(logout());
+    navigate('/');
+  };
+
   return (
     <Navbar fluid className={classes.navBar}>
       <Navbar.Brand>
@@ -17,42 +30,57 @@ const HeaderBar: React.FC<{}> = (props) => {
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
-        <Dropdown
-          arrowIcon={false}
-          inline
-          label={<Avatar alt="User settings" rounded />}
-        >
-          <Dropdown.Header>
-            <span className="block text-sm">Bonnie Green</span>
-            <span className="block truncate text-sm font-medium">
-              name@flowbite.com
-            </span>
-          </Dropdown.Header>
-          <Dropdown.Item>Edit profile</Dropdown.Item>
-          <Dropdown.Divider />
-          <Dropdown.Item>Sign out</Dropdown.Item>
-        </Dropdown>
+        {userInfo ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={<Avatar alt="User settings" rounded />}
+          >
+            <Dropdown.Header>
+              <span className="block text-sm">{userInfo.name}</span>
+              <span className="block truncate text-sm font-medium">
+                {userInfo.email}
+              </span>
+            </Dropdown.Header>
+            <Dropdown.Item>Edit profile</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={logOutHandeler}>Sign out</Dropdown.Item>
+          </Dropdown>
+        ) : (
+          <Link to={'/login'}>
+            <Button type="button">Login</Button>
+          </Link>
+        )}
+
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
         <NavLink
           to={''}
-          className={({ isActive }) => [isActive ? `${classes.linkActive}` : ''].join(' ')}
+          className={({ isActive }) =>
+            [isActive ? `${classes.linkActive}` : ''].join(' ')
+          }
         >
           Home
         </NavLink>
         <NavLink
           to={'product'}
-          className={({ isActive }) => [isActive ? `${classes.linkActive}` : ''].join(' ')}
+          className={({ isActive }) =>
+            [isActive ? `${classes.linkActive}` : ''].join(' ')
+          }
         >
           Products
         </NavLink>
-        <NavLink
-          to={'user'}
-          className={({ isActive }) => [isActive ? `${classes.linkActive}` : ''].join(' ')}
-        >
-          Users
-        </NavLink>
+        {userInfo && (
+          <NavLink
+            to={'user'}
+            className={({ isActive }) =>
+              [isActive ? `${classes.linkActive}` : ''].join(' ')
+            }
+          >
+            Users
+          </NavLink>
+        )}
       </Navbar.Collapse>
     </Navbar>
   );

@@ -7,7 +7,10 @@ import reportWebVitals from './reportWebVitals';
 import PageNotFound from './pages/PageNotFound/PageNotFound';
 import { Provider } from 'react-redux';
 import { store } from './store/reducers';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import LoginPage from './pages/Login/Login';
+import { checkAuthLoader } from './utils/checkAuth';
+import SignUpPage from './pages/SignUp/SignUp';
 
 const router = createBrowserRouter([
   {
@@ -33,8 +36,9 @@ const router = createBrowserRouter([
       {
         path: 'product/create',
         async lazy(): Promise<any> {
-          let ProductCreatePage = (await import('./pages/ProductCreate/ProductCreate'))
-            .default;
+          let ProductCreatePage = (
+            await import('./pages/ProductCreate/ProductCreate')
+          ).default;
           return { Component: ProductCreatePage };
         },
       },
@@ -53,6 +57,7 @@ const router = createBrowserRouter([
           let UsersPage = (await import('./pages/Users/Users')).default;
           return { Component: UsersPage };
         },
+        loader: checkAuthLoader,
       },
       {
         path: 'user/:userId',
@@ -62,16 +67,42 @@ const router = createBrowserRouter([
             .default;
           return { Component: UserDetailPage };
         },
+        loader: checkAuthLoader,
       },
     ],
+  },
+  {
+    path: '/login',
+    element: <LoginPage></LoginPage>,
+  },
+  {
+    path: '/signup',
+    element: <SignUpPage></SignUpPage>,
   },
 ]);
 
 axios.defaults.baseURL = 'https://nodejs-todo-9emm.onrender.com';
 axios.interceptors.request.use((config) => {
   config.headers['Content-Type'] = 'application/json';
+
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers['Authorization'] = `Bear ${token}`;
+  }
   return config;
 });
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    if (error.response?.status === 401) {
+      localStorage.clear();
+      window.location.href = '/login';
+    }
+
+    throw error.response?.data;
+  }
+);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

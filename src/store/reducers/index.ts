@@ -1,6 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { productReducer } from './productSlice';
 import { uiLoadingReducer } from './uiLoadingSlice';
+import { authReducer } from './authSlice';
+import { userReducer } from './userSlice';
 import { uiToastMessageReducer } from './uiToastMessageSlice';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../sagas';
@@ -10,7 +12,9 @@ export const store = configureStore({
   reducer: {
     product: productReducer,
     uiLoading: uiLoadingReducer,
-    uiToastMessage: uiToastMessageReducer
+    uiToastMessage: uiToastMessageReducer,
+    auth: authReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(sagaMiddleware),
@@ -21,5 +25,24 @@ sagaMiddleware.run(rootSaga);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// selectors
+// product selectors
 export const selectProducts = (state: RootState) => state.product.products;
+export const selectProductDetail = (state: RootState) =>
+  state.product.productDetail;
+
+// loading selectors
+export const selectLoadings = (state: RootState) => state.uiLoading.loadings;
+
+// uiToastMessage selectors
+export const selectIsShowMessage = (state: RootState) =>
+  state.uiToastMessage.isShow;
+export const selectMessage = (state: RootState) => state.uiToastMessage.message;
+export const selectMessageType = (state: RootState) =>
+  state.uiToastMessage.type;
+
+// users selectors
+export const selectUsers = (state: RootState) => state.user.users;
+
+// auth selectors
+export const selectToken = (state: RootState) => state.auth.token;
+export const selectUserInfo = (state: RootState) => state.auth.userInfo;

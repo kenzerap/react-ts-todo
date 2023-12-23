@@ -19,7 +19,7 @@ const HomePage: React.FC<{}> = (props) => {
           Welcome to ReactPee shop
         </h3>
 
-        <Carousel slideInterval={3000}>
+        <Carousel slideInterval={2000}>
           {images.map((imageUrl, index) => {
             return (
               <img
