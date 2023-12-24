@@ -81,7 +81,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-axios.defaults.baseURL = 'https://nodejs-todo-9emm.onrender.com';
+axios.defaults.baseURL = process.env.API_URL || 'https://nodejs-todo-9emm.onrender.com';
 axios.interceptors.request.use((config) => {
   config.headers['Content-Type'] = 'application/json';
 

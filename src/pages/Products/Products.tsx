@@ -94,7 +94,7 @@ const ProductsPage: React.FC<{}> = (props) => {
                       <img
                         src={product.imageUrl}
                         alt={product.imageUrl}
-                        className="max-w-60"
+                        className="max-w-60 max-h-60"
                       />
                     </Table.Cell>
                     <Table.Cell>{product.description}</Table.Cell>
