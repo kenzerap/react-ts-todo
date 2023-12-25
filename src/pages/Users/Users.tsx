@@ -2,7 +2,11 @@ import React, { Fragment, useEffect } from 'react';
 import { Card, Spinner, Table } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as fromReducer from '../../store/reducers';
-import { getUsers, resetUserState } from '../../store/reducers/userSlice';
+import {
+  getUsers,
+  deleteUser,
+  resetUserState,
+} from '../../store/reducers/userSlice';
 import { User } from '../../models/user.model';
 import { Link } from 'react-router-dom';
 import { resetLoading } from '../../store/reducers/uiLoadingSlice';
@@ -13,6 +17,9 @@ const UsersPage: React.FC<{}> = (props) => {
     getUsers.type
   ];
   const users: User[] = useSelector(fromReducer.selectUsers);
+  const deleting: boolean = useSelector(fromReducer.selectLoadings)[
+    deleteUser.type
+  ];
 
   useEffect(() => {
     dispatch(getUsers());
@@ -24,7 +31,7 @@ const UsersPage: React.FC<{}> = (props) => {
   }, [dispatch]);
 
   const deleteUserHandler = (userId: string) => {
-    alert('feature is implementing');
+    dispatch(deleteUser({ userId }));
   };
 
   return (
@@ -67,7 +74,9 @@ const UsersPage: React.FC<{}> = (props) => {
                       <Link
                         to={''}
                         onClick={() => deleteUserHandler(user.id)}
-                        className={`font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4`}
+                        className={`font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4 ${
+                          deleting ? 'pointer-events-none' : ''
+                        }`}
                       >
                         Delete
                       </Link>

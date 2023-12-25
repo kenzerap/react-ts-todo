@@ -42,7 +42,9 @@ const HeaderBar: React.FC<{}> = (props) => {
                 {userInfo.email}
               </span>
             </Dropdown.Header>
-            <Dropdown.Item>Edit profile</Dropdown.Item>
+            <Dropdown.Item>
+              <Link to={`/user/${userInfo.id}`}>Edit profile</Link>
+            </Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item onClick={logOutHandeler}>Sign out</Dropdown.Item>
           </Dropdown>
