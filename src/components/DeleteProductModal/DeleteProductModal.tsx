@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Modal } from 'flowbite-react';
-import classes from './DeleteProductModal.module.css';
 
 const DeleteProductModal: React.FC<{
   isShowDeleteModal: boolean;

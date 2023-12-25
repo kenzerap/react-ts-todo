@@ -29,6 +29,7 @@
     "start": "react-scripts start",
     "startport": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
+    "eslint": "npx eslint \"src/**\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

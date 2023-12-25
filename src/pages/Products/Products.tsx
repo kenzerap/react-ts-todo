@@ -37,7 +37,7 @@ const ProductsPage: React.FC<{}> = (props) => {
       dispatch(resetLoading());
       dispatch(resetProducts());
     };
-  }, []);
+  }, [dispatch]);
 
   const navigateToCreate = () => {
     navigate('/product/create');

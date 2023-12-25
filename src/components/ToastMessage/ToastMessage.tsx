@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import classes from './ToastMessage.module.css';
 import { Toast } from 'flowbite-react';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { useSelector } from 'react-redux';

@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import classes from './Login.module.css';
 import {
   Button,
   Card,
@@ -19,7 +18,7 @@ const SignUpPage: React.FC<{}> = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [initialValues, setInitialValues] = useState<{
+  const [initialValues] = useState<{
     email: string;
     password: string;
     confirmPassword: string;
@@ -46,6 +45,7 @@ const SignUpPage: React.FC<{}> = (props) => {
     if (!loading && isSubmitted && message !== 'error') {
       navigate('/login');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, isSubmitted, navigate, dispatch]);
 
   const signupFormSchema = Yup.object().shape({
@@ -90,7 +90,7 @@ const SignUpPage: React.FC<{}> = (props) => {
       onSubmit={submitForm}
     >
       {(formik) => {
-        const { errors, touched, isValid, dirty } = formik;
+        const { errors, touched, isValid } = formik;
         return (
           <Fragment>
             <ToastMessage></ToastMessage>

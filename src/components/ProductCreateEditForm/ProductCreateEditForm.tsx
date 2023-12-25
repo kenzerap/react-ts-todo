@@ -7,7 +7,6 @@ import {
   TextInput,
   Textarea,
 } from 'flowbite-react';
-import classes from './ProductCreateEditForm.module.css';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -50,7 +49,7 @@ const ProductCreateEditForm: React.FC<{
       dispatch(resetLoading());
       dispatch(resetProducts());
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (isCreating || isUpdating) {
@@ -60,6 +59,7 @@ const ProductCreateEditForm: React.FC<{
     if (!isCreating && !isUpdating && isSubmitted && message !== 'error') {
       navigate('/product');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCreating, isSubmitted, isUpdating, navigate, dispatch]);
 
   useEffect(() => {

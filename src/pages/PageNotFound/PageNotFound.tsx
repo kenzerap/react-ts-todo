@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import classes from './PageNotFound.module.css';
 import HeaderBar from '../../components/HeaderBar/HeaderBar';
 
 const PageNotFound: React.FC<{}> = (props) => {

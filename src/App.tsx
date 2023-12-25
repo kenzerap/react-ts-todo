@@ -15,7 +15,7 @@ function App() {
     const user = userInfo ? JSON.parse(userInfo) : null;
 
     dispatch(setAuthState({ token, user }));
-  }, []);
+  }, [dispatch]);
 
   return (
     <Fragment>

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import classes from './ProductCreate.module.css';
 import ProductCreateEditForm from '../../components/ProductCreateEditForm/ProductCreateEditForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -14,9 +13,8 @@ const ProductCreatePage: React.FC<{}> = (props) => {
   const productDetail: Product | null = useSelector(fromReducer.selectProductDetail);
 
   useEffect(() => {
-    console.log(productId);
     dispatch(getProductById({ productId: productId || '' }));
-  }, []);
+  }, [dispatch, productId]);
   return <ProductCreateEditForm isCreate={false} data={productDetail}></ProductCreateEditForm>;
 };
 

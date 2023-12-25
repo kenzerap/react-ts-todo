@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect } from 'react';
-import classes from './Users.module.css';
 import { Card, Spinner, Table } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as fromReducer from '../../store/reducers';
@@ -22,7 +21,7 @@ const UsersPage: React.FC<{}> = (props) => {
       dispatch(resetLoading());
       dispatch(resetUserState());
     };
-  }, []);
+  }, [dispatch]);
 
   const deleteUserHandler = (userId: string) => {
     alert('feature is implementing');
