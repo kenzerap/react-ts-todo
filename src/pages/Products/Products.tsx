@@ -12,6 +12,7 @@ import { Product } from '../../models/product.model';
 import { Link, useNavigate } from 'react-router-dom';
 import { Spinner } from 'flowbite-react';
 import { resetLoading } from '../../store/reducers/uiLoadingSlice';
+import { addToCart } from '../../store/reducers/cartShoppingSlice';
 import DeleteProductModal from '../../components/DeleteProductModal/DeleteProductModal';
 
 const ProductsPage: React.FC<{}> = (props) => {
@@ -20,7 +21,6 @@ const ProductsPage: React.FC<{}> = (props) => {
 
   const products: Product[] = useSelector(fromReducer.selectProducts);
   const isAdmin: boolean = useSelector(fromReducer.selectIsAdmin);
-  const isLogin: boolean = useSelector(fromReducer.selectIsLogin);
 
   const productsLoading: boolean = useSelector(fromReducer.selectLoadings)[
     getProducts.type
@@ -58,7 +58,9 @@ const ProductsPage: React.FC<{}> = (props) => {
     setIsShowDeleteModal(false);
   };
 
-  const addToCard = () => {};
+  const addToCard = (product: Product) => {
+    dispatch(addToCart({ item: product }));
+  };
 
   const adminAdtions = (product: Product) => (
     <>
@@ -80,8 +82,8 @@ const ProductsPage: React.FC<{}> = (props) => {
     </>
   );
 
-  const userAdtions = (
-    <Button onClick={addToCard} className="w-max">
+  const userAdtions = (product: Product) => (
+    <Button onClick={() => addToCard(product)} className="w-max">
       Add to cart
     </Button>
   );
@@ -90,7 +92,7 @@ const ProductsPage: React.FC<{}> = (props) => {
     <Fragment>
       <div className="flex justify-between mb-8">
         <div className="text-2xl font-bold">Product list</div>
-        <Button onClick={navigateToCreate}>Create</Button>
+        {isAdmin && <Button onClick={navigateToCreate}>Create</Button>} 
       </div>
 
       <Card className="overflow-x-auto">
@@ -131,8 +133,7 @@ const ProductsPage: React.FC<{}> = (props) => {
                     </Table.Cell>
                     <Table.Cell>{product.description}</Table.Cell>
                     <Table.Cell>
-                      {/* {isAdmin ? adminAdtions(product) : userAdtions} */}
-                      {adminAdtions(product)}
+                      {isAdmin ? adminAdtions(product) : userAdtions(product)}
                     </Table.Cell>
                   </Table.Row>
                 );

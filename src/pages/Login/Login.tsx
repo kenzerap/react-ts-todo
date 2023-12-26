@@ -1,11 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import {
-  Button,
-  Card,
-  Label,
-  Spinner,
-  TextInput,
-} from 'flowbite-react';
+import { Button, Card, Label, Spinner, TextInput } from 'flowbite-react';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
@@ -37,7 +31,7 @@ const LoginPage: React.FC<{}> = (props) => {
     if (!loading && isSubmitted && message !== 'error') {
       navigate('/');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, isSubmitted, navigate, dispatch]);
 
   const loginFormSchema = Yup.object().shape({
@@ -69,6 +63,7 @@ const LoginPage: React.FC<{}> = (props) => {
             <ToastMessage></ToastMessage>
             <div className="m-8 grid justify-center">
               <div className="text-2xl font-bold mb-8	text-center">Login</div>
+              <div>Note: admin account: admin@yopmail.com - 123456</div>
               <Card className="min-w-96">
                 <Form>
                   <div className="mb-4">

@@ -6,11 +6,14 @@ import * as fromReducer from '../../store/reducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { User } from '../../models/user.model';
 import { logout } from '../../store/reducers/authSlice';
+import CartShopping from '../CartShopping/CartShopping';
 
 const HeaderBar: React.FC<{}> = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userInfo: User | null = useSelector(fromReducer.selectUserInfo);
+  const isAdmin: boolean = useSelector(fromReducer.selectIsAdmin);
+  const selectedItem: number = useSelector(fromReducer.selectCartItemCount);
 
   const logOutHandeler = () => {
     dispatch(logout());
@@ -30,6 +33,10 @@ const HeaderBar: React.FC<{}> = (props) => {
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
+        <div className="mr-8">
+          <CartShopping selectedItem={selectedItem}></CartShopping>
+        </div>
+
         {userInfo ? (
           <Dropdown
             arrowIcon={false}
@@ -43,7 +50,7 @@ const HeaderBar: React.FC<{}> = (props) => {
               </span>
             </Dropdown.Header>
             <Dropdown.Item>
-              <Link to={`/user/${userInfo.id}`}>Edit profile</Link>
+              <Link to={`/user/${userInfo.id}`}>View profile</Link>
             </Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item onClick={logOutHandeler}>Sign out</Dropdown.Item>
@@ -73,7 +80,7 @@ const HeaderBar: React.FC<{}> = (props) => {
         >
           Products
         </NavLink>
-        {userInfo && (
+        {isAdmin && (
           <NavLink
             to={'user'}
             className={({ isActive }) =>

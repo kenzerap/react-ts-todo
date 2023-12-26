@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -19,6 +19,7 @@ import {
 import * as fromReducer from '../../store/reducers';
 import { resetLoading } from '../../store/reducers/uiLoadingSlice';
 import { Product } from '../../models/product.model';
+import classes from './ProductCreateEditForm.module.css';
 
 const ProductCreateEditForm: React.FC<{
   isCreate: boolean;
@@ -59,7 +60,7 @@ const ProductCreateEditForm: React.FC<{
     if (!isCreating && !isUpdating && isSubmitted && message !== 'error') {
       navigate('/product');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCreating, isSubmitted, isUpdating, navigate, dispatch]);
 
   useEffect(() => {
@@ -101,7 +102,7 @@ const ProductCreateEditForm: React.FC<{
       {(formik) => {
         const { errors, touched, isValid } = formik;
         return (
-          <Fragment>
+          <div className={classes.layout}>
             <div className="text-2xl font-bold mb-8	">{text} product</div>
             <Card>
               <Form>
@@ -112,7 +113,7 @@ const ProductCreateEditForm: React.FC<{
                   <TextInput
                     id="name"
                     placeholder="Product name"
-                    type='text'
+                    type="text"
                     color={errors.name && touched.name ? 'failure' : ''}
                     value={formik.values.name}
                     onChange={formik.handleChange}
@@ -151,7 +152,7 @@ const ProductCreateEditForm: React.FC<{
                   </div>
                   <TextInput
                     id="imageUrl"
-                    type='text'
+                    type="text"
                     placeholder="imageUrl"
                     value={formik.values.imageUrl}
                     onChange={formik.handleChange}
@@ -177,7 +178,9 @@ const ProductCreateEditForm: React.FC<{
                   <Button
                     type="submit"
                     className={
-                      !isValid || isCreating || isUpdating ? 'disabled-btn mr-2' : 'mr-2'
+                      !isValid || isCreating || isUpdating
+                        ? 'disabled-btn mr-2'
+                        : 'mr-2'
                     }
                     disabled={!isValid || isCreating || isUpdating}
                   >
@@ -194,7 +197,7 @@ const ProductCreateEditForm: React.FC<{
                 </div>
               </Form>
             </Card>
-          </Fragment>
+          </div>
         );
       }}
     </Formik>

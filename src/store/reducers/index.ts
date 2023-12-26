@@ -3,6 +3,7 @@ import { productReducer } from './productSlice';
 import { uiLoadingReducer } from './uiLoadingSlice';
 import { authReducer } from './authSlice';
 import { userReducer } from './userSlice';
+import { cartShoppingReducer } from './cartShoppingSlice';
 import { uiToastMessageReducer } from './uiToastMessageSlice';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../sagas';
@@ -15,6 +16,7 @@ export const store = configureStore({
     uiToastMessage: uiToastMessageReducer,
     auth: authReducer,
     user: userReducer,
+    cartShopping: cartShoppingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(sagaMiddleware),
@@ -42,9 +44,16 @@ export const selectMessageType = (state: RootState) =>
 
 // users selectors
 export const selectUsers = (state: RootState) => state.user.users;
+export const selectUserDetail = (state: RootState) => state.user.userDetail;
 
 // auth selectors
 export const selectToken = (state: RootState) => state.auth.token;
 export const selectUserInfo = (state: RootState) => state.auth.userInfo;
-export const selectIsAdmin = (state: RootState) => !!(state.auth.userInfo?.isAdmin);
-export const selectIsLogin = (state: RootState) => !!(state.auth.userInfo);
+export const selectIsAdmin = (state: RootState) =>
+  !!state.auth.userInfo?.isAdmin;
+export const selectIsLogin = (state: RootState) => !!state.auth.userInfo;
+
+// cartShopping selectors
+export const selectCartItemCount = (state: RootState) =>
+  state.cartShopping.itemCount;
+export const selectCartitems = (state: RootState) => state.cartShopping.items;
