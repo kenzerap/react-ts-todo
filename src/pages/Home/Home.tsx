@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import classes from './Home.module.css';
 import { Card, Carousel } from 'flowbite-react';
 
@@ -13,26 +13,24 @@ const HomePage: React.FC<{}> = (props) => {
     'https://www.tnmt.edu.vn/wp-content/uploads/2023/11/hinh-nen-powerpoint-giang-sinh-2.jpg',
   ];
   return (
-    <Fragment>
-      <Card className={classes.cardbar}>
-        <h3 className="text-center text-7xl mt-8 mb-8">
-          Welcome to ReactPee shop
-        </h3>
+    <Card className={classes.cardbar}>
+      <h3 className="text-center text-5xl mt-4 mb-4">
+        Welcome to ReactPee shop
+      </h3>
 
-        <Carousel slideInterval={2000}>
-          {images.map((imageUrl, index) => {
-            return (
-              <img
-                className={classes.image}
-                src={imageUrl}
-                alt={imageUrl}
-                key={index}
-              />
-            );
-          })}
-        </Carousel>
-      </Card>
-    </Fragment>
+      <Carousel slideInterval={2000}>
+        {images.map((imageUrl, index) => {
+          return (
+            <img
+              className={classes.image}
+              src={imageUrl}
+              alt={imageUrl}
+              key={index}
+            />
+          );
+        })}
+      </Carousel>
+    </Card>
   );
 };
 

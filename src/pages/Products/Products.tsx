@@ -19,6 +19,8 @@ const ProductsPage: React.FC<{}> = (props) => {
   const [productIdDeleted, setProductIdDeleted] = useState('');
 
   const products: Product[] = useSelector(fromReducer.selectProducts);
+  const isAdmin: boolean = useSelector(fromReducer.selectIsAdmin);
+  const isLogin: boolean = useSelector(fromReducer.selectIsLogin);
 
   const productsLoading: boolean = useSelector(fromReducer.selectLoadings)[
     getProducts.type
@@ -56,6 +58,34 @@ const ProductsPage: React.FC<{}> = (props) => {
     setIsShowDeleteModal(false);
   };
 
+  const addToCard = () => {};
+
+  const adminAdtions = (product: Product) => (
+    <>
+      <Link
+        to={`/product/${product.id}`}
+        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+      >
+        Edit
+      </Link>
+      <Link
+        to={''}
+        onClick={() => deleteProductHandler(product.id)}
+        className={`font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4 ${
+          deleting ? classes.disabled : ''
+        }`}
+      >
+        Delete
+      </Link>
+    </>
+  );
+
+  const userAdtions = (
+    <Button onClick={addToCard} className="w-max">
+      Add to cart
+    </Button>
+  );
+
   return (
     <Fragment>
       <div className="flex justify-between mb-8">
@@ -76,7 +106,7 @@ const ProductsPage: React.FC<{}> = (props) => {
               <Table.HeadCell>Image</Table.HeadCell>
               <Table.HeadCell>Description</Table.HeadCell>
               <Table.HeadCell>
-                <span className="sr-only">Edit</span>
+                <span className="sr-only">Actions</span>
               </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -101,21 +131,8 @@ const ProductsPage: React.FC<{}> = (props) => {
                     </Table.Cell>
                     <Table.Cell>{product.description}</Table.Cell>
                     <Table.Cell>
-                      <Link
-                        to={`/product/${product.id}`}
-                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                      >
-                        Edit
-                      </Link>
-                      <Link
-                        to={''}
-                        onClick={() => deleteProductHandler(product.id)}
-                        className={`font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4 ${
-                          deleting ? classes.disabled : ''
-                        }`}
-                      >
-                        Delete
-                      </Link>
+                      {/* {isAdmin ? adminAdtions(product) : userAdtions} */}
+                      {adminAdtions(product)}
                     </Table.Cell>
                   </Table.Row>
                 );

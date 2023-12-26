@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Card, Spinner, Table } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as fromReducer from '../../store/reducers';
@@ -10,9 +10,12 @@ import {
 import { User } from '../../models/user.model';
 import { Link } from 'react-router-dom';
 import { resetLoading } from '../../store/reducers/uiLoadingSlice';
+import DeleteProductModal from '../../components/DeleteProductModal/DeleteProductModal';
 
 const UsersPage: React.FC<{}> = (props) => {
   const dispatch = useDispatch();
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
+  const [userIdDeleted, setUserIdDeleted] = useState('');
   const loading: boolean = useSelector(fromReducer.selectLoadings)[
     getUsers.type
   ];
@@ -31,7 +34,16 @@ const UsersPage: React.FC<{}> = (props) => {
   }, [dispatch]);
 
   const deleteUserHandler = (userId: string) => {
-    dispatch(deleteUser({ userId }));
+    setIsShowDeleteModal(true);
+    setUserIdDeleted(userId);
+  };
+
+  const closeConfirmModalHandeler = (isConfirm: boolean) => {
+    if (isConfirm) {
+      dispatch(deleteUser({ userId: userIdDeleted }));
+    }
+
+    setIsShowDeleteModal(false);
   };
 
   return (
@@ -53,6 +65,8 @@ const UsersPage: React.FC<{}> = (props) => {
               <Table.HeadCell>Email</Table.HeadCell>
               <Table.HeadCell>Phone</Table.HeadCell>
               <Table.HeadCell>Address</Table.HeadCell>
+              <Table.HeadCell>role</Table.HeadCell>
+              <Table.HeadCell>status</Table.HeadCell>
               <Table.HeadCell>
                 <span className="sr-only">Delete</span>
               </Table.HeadCell>
@@ -70,16 +84,20 @@ const UsersPage: React.FC<{}> = (props) => {
                     <Table.Cell>{user.email}</Table.Cell>
                     <Table.Cell>{user.phone}</Table.Cell>
                     <Table.Cell>{user.address}</Table.Cell>
+                    <Table.Cell>{user.isAdmin ? 'Admin' : 'User'}</Table.Cell>
+                    <Table.Cell>{user.status}</Table.Cell>
                     <Table.Cell>
-                      <Link
-                        to={''}
-                        onClick={() => deleteUserHandler(user.id)}
-                        className={`font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4 ${
-                          deleting ? 'pointer-events-none' : ''
-                        }`}
-                      >
-                        Delete
-                      </Link>
+                      {!user.isAdmin && (
+                        <Link
+                          to={''}
+                          onClick={() => deleteUserHandler(user.id)}
+                          className={`font-medium text-cyan-600 hover:underline dark:text-cyan-500 ml-4 ${
+                            deleting ? 'pointer-events-none' : ''
+                          }`}
+                        >
+                          Delete
+                        </Link>
+                      )}
                     </Table.Cell>
                   </Table.Row>
                 );
@@ -88,6 +106,11 @@ const UsersPage: React.FC<{}> = (props) => {
           </Table>
         )}
       </Card>
+
+      <DeleteProductModal
+        isShowDeleteModal={isShowDeleteModal}
+        onCloseConfirmModal={closeConfirmModalHandeler}
+      ></DeleteProductModal>
     </Fragment>
   );
 };

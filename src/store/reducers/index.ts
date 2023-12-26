@@ -46,3 +46,5 @@ export const selectUsers = (state: RootState) => state.user.users;
 // auth selectors
 export const selectToken = (state: RootState) => state.auth.token;
 export const selectUserInfo = (state: RootState) => state.auth.userInfo;
+export const selectIsAdmin = (state: RootState) => !!(state.auth.userInfo?.isAdmin);
+export const selectIsLogin = (state: RootState) => !!(state.auth.userInfo);

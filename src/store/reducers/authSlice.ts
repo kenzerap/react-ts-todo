@@ -30,7 +30,10 @@ export const authSlice = createSlice({
       localStorage.setItem('userInfo', JSON.stringify(action.payload.user));
     },
     loginFailed: () => {},
-    signup: (state: AuthState, action: PayloadAction<{ userData: Partial<User> }>) => {},
+    signup: (
+      state: AuthState,
+      action: PayloadAction<{ userData: Partial<User> }>
+    ) => {},
     signupSuccess: () => {},
     signupFailed: () => {},
 
