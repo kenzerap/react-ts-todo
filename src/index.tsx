@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import { store } from './store/reducers';
 import axios, { AxiosError } from 'axios';
 import LoginPage from './pages/Login/Login';
-import { checkAuthLoader } from './utils/checkAuth';
+import { checkAuthLoader, isAdminLoader } from './utils/checkAuth';
 import SignUpPage from './pages/SignUp/SignUp';
 
 const router = createBrowserRouter([
@@ -41,6 +41,7 @@ const router = createBrowserRouter([
           ).default;
           return { Component: ProductCreatePage };
         },
+        loader: isAdminLoader
       },
       {
         path: 'product/:productId',
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
           ).default;
           return { Component: ProductEditPage };
         },
+        loader: isAdminLoader
       },
       {
         path: 'user',
@@ -57,7 +59,7 @@ const router = createBrowserRouter([
           let UsersPage = (await import('./pages/Users/Users')).default;
           return { Component: UsersPage };
         },
-        loader: checkAuthLoader,
+        loader: isAdminLoader
       },
       {
         path: 'user/:userId',
@@ -67,7 +69,8 @@ const router = createBrowserRouter([
             .default;
           return { Component: UserDetailPage };
         },
-        loader: checkAuthLoader,
+        
+        loader: checkAuthLoader
       },
     ],
   },
